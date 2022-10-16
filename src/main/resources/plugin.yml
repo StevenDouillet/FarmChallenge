@@ -1,0 +1,5 @@
+name: FarmChallenge
+version: '${project.version}'
+main: fr.albus.farmchallenge.FarmChallenge
+api-version: 1.18
+authors: [ AlbusTheRabbit ]
