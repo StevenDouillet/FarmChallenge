@@ -1,1 +1,69 @@
 global-counter: 0
+
+steps:
+  personal:
+    0:
+      farm-block-required: 50
+      material-displayed: PAPER
+      custom-model-data: 0
+    1:
+      farm-block-required: 100
+      material-displayed: PAPER
+      custom-model-data: 0
+    2:
+      farm-block-required: 150
+      material-displayed: PAPER
+      custom-model-data: 0
+    3:
+      farm-block-required: 250
+      material-displayed: PAPER
+      custom-model-data: 0
+    4:
+      farm-block-required: 500
+      material-displayed: PAPER
+      custom-model-data: 0
+    5:
+      farm-block-required: 1500
+      material-displayed: PAPER
+      custom-model-data: 0
+    6:
+      farm-block-required: 2500
+      material-displayed: PAPER
+      custom-model-data: 0
+    7:
+      farm-block-required: 5000
+      material-displayed: PAPER
+      custom-model-data: 0
+  community:
+    0:
+      farm-block-required: 50
+      material-displayed: PAPER
+      custom-model-data: 0
+    1:
+      farm-block-required: 100
+      material-displayed: PAPER
+      custom-model-data: 0
+    2:
+      farm-block-required: 150
+      material-displayed: PAPER
+      custom-model-data: 0
+    3:
+      farm-block-required: 250
+      material-displayed: PAPER
+      custom-model-data: 0
+    4:
+      farm-block-required: 500
+      material-displayed: PAPER
+      custom-model-data: 0
+    5:
+      farm-block-required: 1500
+      material-displayed: PAPER
+      custom-model-data: 0
+    6:
+      farm-block-required: 2500
+      material-displayed: PAPER
+      custom-model-data: 0
+    7:
+      farm-block-required: 5000
+      material-displayed: PAPER
+      custom-model-data: 0

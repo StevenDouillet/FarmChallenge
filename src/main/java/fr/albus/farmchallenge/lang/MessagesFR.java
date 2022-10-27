@@ -15,5 +15,5 @@ public class MessagesFR {
     public static final String DepositSuccessful = pluginPrefix + "&e{depositAmount} &fbloc(s) ont été déposé(s)";
 
     // MENU
-    public static final String DepositMenuTitle = "&fMenu deposit";
+    public static final String DepositMenuTitle = "ꐜ&fꐐ";
 }

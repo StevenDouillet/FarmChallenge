@@ -1,2 +1,26 @@
 general:
   farm-block: STONE
+
+menus:
+  progress:
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      type: PAPER
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: " "
+        custom-model-data: 322
+        lore:
+          - "§fProgression : §e{currentProgression}"
+  step:
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLD_BLOCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: "§6Etape {stepLevel}"
+        custom-model-data: 0
+        lore:
+          - "§fProgression : §e{currentProgression} / {requirement}"

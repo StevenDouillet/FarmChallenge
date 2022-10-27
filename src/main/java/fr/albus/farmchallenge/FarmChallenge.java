@@ -2,6 +2,7 @@ package fr.albus.farmchallenge;
 
 import fr.albus.farmchallenge.dao.*;
 import fr.albus.farmchallenge.manager.CommandManager;
+import fr.albus.farmchallenge.menu.FarmChallengeDepositMenu;
 import fr.albus.farmchallenge.service.FarmChallengeService;
 import fr.albus.farmchallenge.service.FarmChallengeServiceProvider;
 import fr.minuskube.inv.InventoryManager;
@@ -18,9 +19,14 @@ public final class FarmChallenge extends JavaPlugin {
 
     @Getter
     private FarmChallengeService farmChallengeService;
-
     @Getter
     private static InventoryManager inventoryManager;
+    @Getter
+    private GeneralConfigurationDAO generalConfigurationDAO;
+    @Getter
+    private GlobalDataConfigurationDAO globalDataConfigurationDAO;
+    @Getter
+    private PlayerDataConfigurationDAO playerDataConfigurationDAO;
 
     @SneakyThrows
     @Override
@@ -43,9 +49,9 @@ public final class FarmChallenge extends JavaPlugin {
 
 
     private void setupService() {
-        GeneralConfigurationDAO generalConfigurationDAO = new GeneralConfigurationDAOProvider(this);
-        GlobalDataConfigurationDAO globalDataConfigurationDAO = new GlobalDataConfigurationDAOProvider(this);
-        PlayerDataConfigurationDAO playerDataConfigurationDAO = new PlayerDataConfigurationDAOProvider(this);
+        generalConfigurationDAO = new GeneralConfigurationDAOProvider(this);
+        globalDataConfigurationDAO = new GlobalDataConfigurationDAOProvider(this);
+        playerDataConfigurationDAO = new PlayerDataConfigurationDAOProvider(this);
 
         this.farmChallengeService = new FarmChallengeServiceProvider(this, generalConfigurationDAO,
                 globalDataConfigurationDAO, playerDataConfigurationDAO);

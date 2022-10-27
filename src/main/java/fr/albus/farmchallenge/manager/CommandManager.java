@@ -14,7 +14,8 @@ public class CommandManager {
         commandManager.enableUnstableAPI("help");
         commandManager.addSupportedLanguage(Locale.FRANCE);
         commandManager.getLocales().setDefaultLocale(Locale.FRANCE);
-        commandManager.registerCommand(new FarmChallengeCommand(plugin.getFarmChallengeService()));
+        commandManager.registerCommand(new FarmChallengeCommand(plugin.getFarmChallengeService(),
+                plugin.getGlobalDataConfigurationDAO(), plugin.getGeneralConfigurationDAO(), plugin.getPlayerDataConfigurationDAO()));
         commandManager.registerCommand(new FarmChallengeAdmin(plugin.getFarmChallengeService()));
     }
 }

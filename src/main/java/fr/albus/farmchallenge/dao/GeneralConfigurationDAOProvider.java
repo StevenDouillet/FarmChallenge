@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ public class GeneralConfigurationDAOProvider implements GeneralConfigurationDAO 
 
     private static final String MAIN_CONFIG_FILE = "config.yml";
     private static final String GENERAL_SECTION = "general";
+    private static final String MENU_SECTION = "menus";
 
     private final Plugin plugin;
 
@@ -40,6 +42,20 @@ public class GeneralConfigurationDAOProvider implements GeneralConfigurationDAO 
         FileConfiguration config = this.getConfig();
         ConfigurationSection section = config.getConfigurationSection(GENERAL_SECTION);
         return Material.getMaterial(section.get("farm-block").toString());
+    }
+
+    @Override
+    public ItemStack getFullProgressItemMenu() {
+        FileConfiguration config = this.getConfig();
+        ConfigurationSection section = config.getConfigurationSection(MENU_SECTION);
+        return section.getConfigurationSection("progress").getItemStack("item");
+    }
+
+    @Override
+    public ItemStack getStepItemMenu() {
+        FileConfiguration config = this.getConfig();
+        ConfigurationSection section = config.getConfigurationSection(MENU_SECTION);
+        return section.getConfigurationSection("step").getItemStack("item");
     }
 
     private void saveConfig(FileConfiguration config) {
