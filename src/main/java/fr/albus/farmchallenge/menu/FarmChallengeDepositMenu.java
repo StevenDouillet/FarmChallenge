@@ -6,6 +6,7 @@ import fr.albus.farmchallenge.dao.GlobalDataConfigurationDAO;
 import fr.albus.farmchallenge.dao.PlayerDataConfigurationDAO;
 import fr.albus.farmchallenge.lang.MessagesFR;
 import fr.albus.farmchallenge.models.ChallengeStep;
+import fr.albus.farmchallenge.models.ChallengeStepType;
 import fr.albus.farmchallenge.util.InventoryUtils;
 import fr.albus.farmchallenge.util.MessageProvider;
 import fr.minuskube.inv.ClickableItem;
@@ -14,6 +15,7 @@ import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
 import fr.minuskube.inv.content.Pagination;
 import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -52,7 +54,7 @@ public class FarmChallengeDepositMenu implements InventoryProvider {
     @Override
     public void init(Player player, InventoryContents contents) {
         Pagination pagination = contents.pagination();
-        pagination.setItems(new ClickableItem[globalDataConfigurationDAO.getCommunityChallengeSteps().size()]);
+        pagination.setItems(new ClickableItem[globalDataConfigurationDAO.getChallengeSteps(ChallengeStepType.COMMUNITY).size()]);
         pagination.setItemsPerPage(itemPerPage);
         this.setContents(contents, pagination.getPage(), player);
         this.setStaticButtons(contents, player);
@@ -63,8 +65,8 @@ public class FarmChallengeDepositMenu implements InventoryProvider {
     }
 
     private void setContents(InventoryContents contents, int page, Player player) throws IOException {
-        List<ChallengeStep> communitySteps = this.globalDataConfigurationDAO.getCommunityChallengeSteps();
-        List<ChallengeStep> personalSteps = this.globalDataConfigurationDAO.getPersonalChallengeSteps();
+        List<ChallengeStep> communitySteps = this.globalDataConfigurationDAO.getChallengeSteps(ChallengeStepType.COMMUNITY);
+        List<ChallengeStep> personalSteps = this.globalDataConfigurationDAO.getChallengeSteps(ChallengeStepType.PERSONNAL);
         int numberLoop = getNumberOfLoop(communitySteps.size());
         int stepLevelId = getInventoryStartedStep(communitySteps.size(), page + 1) - 1;
 
@@ -77,10 +79,6 @@ public class FarmChallengeDepositMenu implements InventoryProvider {
                 stepLevelId+= 1;
             }
 
-            System.out.println("numberLoop:" + numberLoop);
-            System.out.println("stepleft:" + stepsLeft(communitySteps.size(), page + 1, itemPerPage));
-            System.out.println("page:" + page);
-            System.out.println("communitySteps.size():" + communitySteps.size());
             if (stepsLeft(communitySteps.size(), page + 1, itemPerPage) || stepLevelId <= communitySteps.size()) {
                 if (isAStep) {
                     setStepsItems(i, communitySteps.get(stepLevelId - 1), personalSteps.get(stepLevelId - 1), contents);
@@ -101,8 +99,8 @@ public class FarmChallengeDepositMenu implements InventoryProvider {
     }
 
     private void setStepsItems(int invPlacement, ChallengeStep communityStep, ChallengeStep personalStep, InventoryContents contents) {
-        this.setItem(invPlacement, getStepItemStack(communityStep), getRewardsConsumer(), contents);
-        this.setItem(invPlacement + 27, getStepItemStack(personalStep), getRewardsConsumer(), contents);
+        this.setItem(invPlacement, getStepItemStack(communityStep), null, contents);
+        this.setItem(invPlacement + 27, getStepItemStack(personalStep), getRewardsConsumer(personalStep), contents);
     }
 
     private void setSProgressItems(int invPlacement, InventoryContents contents, int globalProgression, int globalProgressionRequired,
@@ -169,13 +167,13 @@ public class FarmChallengeDepositMenu implements InventoryProvider {
         return new int[]{row, column};
     }
 
-    private Consumer<InventoryClickEvent> getRewardsConsumer() {
-        return event -> event.getWhoClicked().sendMessage("CC"); // TODO
+    private Consumer<InventoryClickEvent> getRewardsConsumer(ChallengeStep step) {
+        return event -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), step.getActions().get(0).replace(
+                "{player}", event.getWhoClicked().getName()));
     }
 
     private ItemStack getStepItemStack(ChallengeStep step) {
-        ItemStack itemStack = generalConfigurationDAO.getStepItemMenu();
-        itemStack.setType(step.getMaterialDisplayed());
+        ItemStack itemStack = step.getDisplayedItem();
 
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(itemMeta.getDisplayName().replace("{stepLevel}", Integer.toString(step.getLevel() + 1)));
@@ -183,7 +181,6 @@ public class FarmChallengeDepositMenu implements InventoryProvider {
         itemMeta.setLore(itemMeta.getLore().stream().map(lore -> lore.replace("{currentProgression}",
                 String.format("%,d", globalDataConfigurationDAO.getGlobalProgress())).replace("{requirement}",
                 String.format("%,d", step.getFarmBlockRequired()))).collect(Collectors.toList()));
-        itemMeta.setCustomModelData(step.getCustomModelData());
 
         itemStack.setItemMeta(itemMeta);
 

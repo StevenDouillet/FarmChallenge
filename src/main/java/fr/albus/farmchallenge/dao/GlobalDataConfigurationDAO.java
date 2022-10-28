@@ -1,6 +1,7 @@
 package fr.albus.farmchallenge.dao;
 
 import fr.albus.farmchallenge.models.ChallengeStep;
+import fr.albus.farmchallenge.models.ChallengeStepType;
 
 import java.util.List;
 
@@ -10,7 +11,5 @@ public interface GlobalDataConfigurationDAO {
 
     int getGlobalProgress();
 
-    List<ChallengeStep> getPersonalChallengeSteps();
-
-    List<ChallengeStep> getCommunityChallengeSteps();
+    List<ChallengeStep> getChallengeSteps(ChallengeStepType stepType);
 }

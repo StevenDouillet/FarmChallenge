@@ -52,12 +52,17 @@ public class FarmChallengeServiceProvider implements FarmChallengeService {
 
     @Override
     public void depositFarmBlock(Player player) throws IOException {
+        Material farmBlock = generalConfigurationDAO.getFarmBlock();
         List<ItemStack> playerBlocks = Arrays.stream(player.getInventory().getContents()).filter(Objects::nonNull)
-                .filter(item -> item.getType() == generalConfigurationDAO.getFarmBlock()).collect(Collectors.toList());
+                .filter(item -> item.getType() == farmBlock).collect(Collectors.toList());
 
         int playerBlockAmount = playerBlocks.stream().mapToInt(ItemStack::getAmount).sum();
 
-        player.getInventory().removeItem(new ItemStack(generalConfigurationDAO.getFarmBlock(), playerBlockAmount));
+        player.getInventory().removeItem(new ItemStack(farmBlock, playerBlockAmount));
+
+        if (player.getInventory().getItemInOffHand().getType() == farmBlock) {
+            player.getInventory().setItemInOffHand(null);
+        }
 
         globalDataConfigurationDAO.incrementGlobalProgress(playerBlockAmount);
         playerDataConfigurationDAO.incrementPlayerProgress(player, playerBlockAmount);

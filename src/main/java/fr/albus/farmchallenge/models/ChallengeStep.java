@@ -2,7 +2,9 @@ package fr.albus.farmchallenge.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class ChallengeStep {
 
@@ -14,15 +16,15 @@ public class ChallengeStep {
     private int farmBlockRequired;
     @Getter
     @Setter
-    private Material materialDisplayed;
+    private ItemStack displayedItem;
     @Getter
     @Setter
-    private int customModelData;
+    private List<String> actions;
 
-    public ChallengeStep(int level, int farmBlockRequired, Material materialDisplayed, int customModelData) {
+    public ChallengeStep(int level, int farmBlockRequired, ItemStack displayedItem, List<String> actions) {
         this.level = level;
         this.farmBlockRequired = farmBlockRequired;
-        this.materialDisplayed = materialDisplayed;
-        this.customModelData = customModelData;
+        this.displayedItem = displayedItem;
+        this.actions = actions;
     }
 }

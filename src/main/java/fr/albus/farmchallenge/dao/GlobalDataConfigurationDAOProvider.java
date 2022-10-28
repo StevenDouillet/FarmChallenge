@@ -1,10 +1,11 @@
 package fr.albus.farmchallenge.dao;
 
 import fr.albus.farmchallenge.models.ChallengeStep;
-import org.bukkit.Material;
+import fr.albus.farmchallenge.models.ChallengeStepType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
@@ -45,41 +46,32 @@ public class GlobalDataConfigurationDAOProvider implements GlobalDataConfigurati
     }
 
     @Override
-    public List<ChallengeStep> getPersonalChallengeSteps() {
-        ConfigurationSection config = this.getConfig().getConfigurationSection(PERSONAL_STEPS_SECTION);
+    public List<ChallengeStep> getChallengeSteps(ChallengeStepType type) {
+        if (!type.equals(ChallengeStepType.PERSONNAL) && !type.equals(ChallengeStepType.COMMUNITY)) return null;
+        ConfigurationSection config = getConfiguration(type);
 
-        if (config.getKeys(false).size() <= 0)
-            return new ArrayList<ChallengeStep>();
+        if (config.getKeys(false).size() <= 0) return new ArrayList<>();
 
         List<ChallengeStep> steps = new ArrayList<ChallengeStep>();
 
         config.getKeys(false).forEach(step -> {
             int farmBlockRequired = config.getInt(step + ".farm-block-required");
-            Material materialDisplayed = Material.getMaterial(config.getString(step + ".material-displayed"));
-            int customModelData = config.getInt(step + ".custom-model-data");
-            steps.add(new ChallengeStep(Integer.parseInt(step), farmBlockRequired, materialDisplayed, customModelData));
+            List<String> actions = config.getStringList(step + ".actions");
+            ItemStack displayedItem = config.getItemStack(step + ".item-displayed");
+            steps.add(new ChallengeStep(Integer.parseInt(step), farmBlockRequired, displayedItem, actions));
         });
 
         return steps;
     }
 
-    @Override
-    public List<ChallengeStep> getCommunityChallengeSteps() {
-        ConfigurationSection config = this.getConfig().getConfigurationSection(COMMUNITY_STEPS_SECTION);
+    private ConfigurationSection getConfiguration(ChallengeStepType stepType) {
+        if (stepType.equals(ChallengeStepType.PERSONNAL))
+            return this.getConfig().getConfigurationSection(PERSONAL_STEPS_SECTION);
 
-        if (config.getKeys(false).size() <= 0)
-            return new ArrayList<ChallengeStep>();
+        if (stepType.equals(ChallengeStepType.COMMUNITY))
+            return this.getConfig().getConfigurationSection(COMMUNITY_STEPS_SECTION);
 
-        List<ChallengeStep> steps = new ArrayList<ChallengeStep>();
-
-        config.getKeys(false).forEach(step -> {
-            int farmBlockRequired = config.getInt(step + ".farm-block-required");
-            Material materialDisplayed = Material.getMaterial(config.getString(step + ".material-displayed"));
-            int customModelData = config.getInt(step + ".custom-model-data");
-            steps.add(new ChallengeStep(Integer.parseInt(step), farmBlockRequired, materialDisplayed, customModelData));
-        });
-
-        return steps;
+        return null;
     }
 
     private void saveConfig(FileConfiguration config) {
